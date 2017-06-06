@@ -2,6 +2,7 @@ package com.honjane.handlerdemo;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.util.Log;
 
 import com.honjane.handlerdemo.lib.Handler;
@@ -28,17 +29,18 @@ public class MainActivity extends Activity {
 
     private void test() {
 
-
-
-        for (int i = 0; i < 1; i++) {
+/*        for (int i = 0; i < 2; i++) {
             new Thread(new Mythread(i,mHandler)).start();
-        }
-        mHandler.post(new Runnable() {
+        }*/
+        new Thread(new Mythread(0,mHandler,1000)).start();
+        new Thread(new Mythread(1,mHandler,4000)).start();
+        new Thread(new Mythread(2,mHandler,3000)).start();
+/*        mHandler.post(new Runnable() {
             @Override
             public void run() {
                 Log.e(TAG, "run");
             }
-        });
+        });*/
     }
 
 
@@ -54,7 +56,7 @@ public class MainActivity extends Activity {
             mHandler = new Handler() {
                 @Override
                 public void handleMessage(Message message) {
-                    Log.e(TAG, "xiayu main thread recv message------" + message.obj.toString());
+                    Log.e(TAG, "xiayu main thread recv message------" + message.obj.toString()+"  attime:"+ SystemClock.uptimeMillis());
                 }
             };
             Looper.loop();
@@ -67,18 +69,21 @@ public class MainActivity extends Activity {
     class Mythread implements Runnable{
 
         private int count;
-        Handler mHandler;
-        Mythread(int i, Handler handler){
+        private long mDelay;
+        private Handler mHandler;
+        Mythread(int i, Handler handler, long delay){
             count = i;
             mHandler = handler;
+            mDelay = delay;
         }
 
         @Override
         public void run() {
             Message msg = new Message();
             msg.obj = count;
-            Log.i(TAG, "sup thread " + Thread.currentThread().getName() + ": send message------" + msg.obj);
-            mHandler.sendMessage(msg);
+            Log.e(TAG, "sup thread " + Thread.currentThread().getName() + ": send message---" + msg.obj+"  attime:"+ SystemClock.uptimeMillis());
+            mHandler.sendMessageDelayed(msg, mDelay);
+
         }
     }
 }
