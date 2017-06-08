@@ -12,12 +12,18 @@ import com.honjane.handlerdemo.lib.Message;
 public class MainActivity extends Activity {
 
     private static final String TAG = MainActivity.class.getName();
+    public native String stringFromJNI();
+
+    static {
+        System.loadLibrary("handlerdemo");
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        Log.e(TAG, "JNI:"+stringFromJNI());
         new ThreadWithLooper().start();
         try {
             Thread.sleep(300);
