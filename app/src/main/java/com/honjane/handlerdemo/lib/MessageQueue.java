@@ -47,7 +47,7 @@ public class MessageQueue {
 
         while (true) {
             if (mQueue.size() > 0) {
-                message = mQueue.get(0);
+                message = mQueue.get(0);//拿到是头部的
                 remain = message.getWhen() - SystemClock.uptimeMillis();
                 if (remain > 0) {
                     try {
